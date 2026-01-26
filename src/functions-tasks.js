@@ -148,8 +148,23 @@ function memoize(func) {
  * }, 2);
  * retryer() => 2
  */
-function retry(/* func, attempts */) {
-  throw new Error('Not implemented');
+function retry(func, attempts) {
+  let count = 0;
+  return () => {
+    for (let i = 0; i <= attempts; i += 1) {
+      try {
+        count += 1;
+        return func();
+      } catch (error) {
+        if (count === attempts) {
+          return error;
+          // Почему то работает и без выкидывания ошибки
+          // И я не знаю что тут в catch ретюрнить
+        }
+      }
+    }
+    return null;
+  };
 }
 
 /**
